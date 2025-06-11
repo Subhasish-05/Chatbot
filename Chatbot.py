@@ -34,21 +34,21 @@ def generate_response(prompt):
 class ChatApp(tk.Tk):
     def __init__(self):
         super().__init__()
-        self.title("AI Chatbot")
+        self.title("QueryBot")
         self.geometry("1000x600")
         self.minsize(600, 400)
-        self.configure(bg="#F0F8FF")
+        self.configure(bg="#212124")
 
         self.conversation_history = []
 
         # Main frame
-        main_frame = tk.Frame(self, bg="#F0F8FF")
+        main_frame = tk.Frame(self, bg="#212124")
         main_frame.pack(fill="both", expand=True)
 
         # Canvas for scrolling chat
-        self.canvas = tk.Canvas(main_frame, bg="#F0F8FF", highlightthickness=0)
+        self.canvas = tk.Canvas(main_frame, bg="#212124", highlightthickness=0)
         self.scrollbar = ttk.Scrollbar(main_frame, orient="vertical", command=self.canvas.yview)
-        self.scrollable_frame = tk.Frame(self.canvas, bg="#F0F8FF")
+        self.scrollable_frame = tk.Frame(self.canvas, bg="#212124")
 
         self.scrollable_frame.bind("<Configure>", lambda e: self.canvas.configure(scrollregion=self.canvas.bbox("all")))
         self.canvas.create_window((0, 0), window=self.scrollable_frame, anchor="nw")
@@ -58,7 +58,7 @@ class ChatApp(tk.Tk):
         self.scrollbar.pack(side="right", fill="y")
 
         # Input frame at bottom
-        input_frame = tk.Frame(self, bg="#F0F8FF")
+        input_frame = tk.Frame(self, bg="#212124")
         input_frame.pack(fill="x", padx=10, pady=10, side="bottom")
 
         self.user_input = tk.Text(input_frame, font=("Arial", 12), height=2, wrap="word")
@@ -75,8 +75,8 @@ class ChatApp(tk.Tk):
         self.msg_row = 0
 
         # Welcome message
-        welcome_text = "Hi, I am Sam. How can I help you?"
-        self.add_message(f"Sam: {welcome_text}", is_user=False)
+        welcome_text = "Hi, I am Zia. How can I help you?"
+        self.add_message(f"Zia: {welcome_text}", is_user=False)
         self.conversation_history.append(("bot", welcome_text))
         threading.Thread(target=speak, args=(welcome_text,), daemon=True).start()
 
@@ -94,13 +94,13 @@ class ChatApp(tk.Tk):
         padding_y = 5
         radius = 45
 
-        wrapper_frame = tk.Frame(self.scrollable_frame, bg="#F0F8FF")
+        wrapper_frame = tk.Frame(self.scrollable_frame, bg="#212124")
         wrapper_frame.grid(row=self.msg_row, column=0, sticky="ew", pady=5, padx=10)
         wrapper_frame.grid_columnconfigure(0, weight=1)
         wrapper_frame.grid_columnconfigure(1, weight=1)
         self.msg_row += 1
 
-        bubble_frame = tk.Frame(wrapper_frame, bg="#F0F8FF")
+        bubble_frame = tk.Frame(wrapper_frame, bg="#212124")
         column = 1 if is_user else 0
         bubble_frame.grid(row=0, column=column, sticky="e" if is_user else "w")
 
@@ -113,18 +113,18 @@ class ChatApp(tk.Tk):
         h = label.winfo_height() + padding_y * 2
         label.destroy()
 
-        bubble = tk.Canvas(bubble_frame, width=w, height=h, bg="#F0F8FF", highlightthickness=0)
+        bubble = tk.Canvas(bubble_frame, width=w, height=h, bg="#212124", highlightthickness=0)
         bubble.pack()
 
-        bg_color = "#000101" if is_user else "#E6E6E6"
-        fg_color = "#00FFFF" if is_user else "#333333"
+        bg_color = "#2872E9" if is_user else "#2D2D2D"
+        fg_color = "#FFFFFF" if is_user else "#FFFFFF"
 
         self.round_rectangle(bubble, 0, 0, w, h, radius, fill=bg_color, outline=bg_color)
         bubble.create_text(w // 2, h // 2, text=text, fill=fg_color, font=("Arial", 12), width=max_width)
 
         self.canvas.yview_moveto(1)
 
-    def round_rectangle(self, canvas, x1, y1, x2, y2, r=30, **kwargs):
+    def round_rectangle(self, canvas, x1, y1, x2, y2, r=45, **kwargs):
         points = [
             x1+r, y1,
             x2-r, y1,
@@ -155,22 +155,23 @@ class ChatApp(tk.Tk):
                 if speaker == "user":
                     prompt += f"User: {text}\n"
                 else:
-                    prompt += f"Sam: {text}\n"
-            prompt += "Sam:"
+                    prompt += f"Zia: {text}\n"
+            prompt += "Zia:"
 
             response = generate_response(prompt)
-            self.add_message(f"Sam: {response}", is_user=False)
+            self.add_message(f"Zia: {response}", is_user=False)
             self.conversation_history.append(("bot", response))
             speak(response)
 
         threading.Thread(target=respond, daemon=True).start()
 
     def end_chat(self):
-        goodbye = "Conversation ended.Goodbye!"
-        self.add_message(f"Sam: {goodbye}", is_user=False)
+        goodbye = "Hope that helped.. Catch you later! Stay awesome 😊"
+        self.add_message(f"Zia: {goodbye}", is_user=False)
         threading.Thread(target=speak, args=(goodbye,), daemon=True).start()
-        self.after(2000, self.destroy)
+        self.after(3000, self.destroy)
 
 if __name__ == "__main__":
     app = ChatApp()
     app.mainloop()
+    
